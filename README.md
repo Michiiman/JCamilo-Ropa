@@ -50,7 +50,7 @@ Se desarrollaron dos endpoints, los cuales fueron:
 
 ## 3.Listar las prendas agrupadas por el tipo de protección.
 
-    **Endpoint**: `http://localhost:5272/api/prenda/consulta3`
+    **Endpoint**: `http://localhost:5272/api/prenda/PrendaPorProteccion`
     
     **Método**: `GET`
 
