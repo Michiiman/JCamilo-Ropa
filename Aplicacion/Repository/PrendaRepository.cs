@@ -41,4 +41,26 @@ public class PrendaRepository : GenericRepo<Prenda>, IPrenda
 
         return (totalRegistros, registros);
     }
+
+    public async Task<IEnumerable<Object>> PrendaPorProteccion()
+    {
+        var consulta = 
+        from e in _context.TipoProtecciones 
+        select new
+        {
+            NombreEspecie = e.Descripcion,
+            prendas = (from m in _context.Prendas
+                        where m.TipoProteccionIdFk == e.Id
+                        select new
+                        {
+                            Id = m.Id,
+                            Nombre = m.Nombre,
+                            ValorUnitCop = m.ValorUnitCop,
+                            ValorUnitUsd = m.ValorUnitUsd,
+                        }).ToList()
+        };
+
+        var dato = await consulta.ToListAsync();
+        return dato;
+    }
 }

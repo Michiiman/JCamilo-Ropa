@@ -11,12 +11,12 @@ namespace API.Controllers;
 [ApiVersion("1.0")]
 [ApiVersion("1.1")]
 [Authorize]
-public class ProveedorController  : BaseApiController
+public class ProveedorController : BaseApiController
 {
     private readonly IUnitOfWork unitofwork;
-    private readonly  IMapper mapper;
+    private readonly IMapper mapper;
 
-    public ProveedorController( IUnitOfWork unitofwork, IMapper mapper)
+    public ProveedorController(IUnitOfWork unitofwork, IMapper mapper)
     {
         this.unitofwork = unitofwork;
         this.mapper = mapper;
@@ -38,7 +38,8 @@ public class ProveedorController  : BaseApiController
     public async Task<ActionResult<ProveedorDto>> Get(int id)
     {
         var entidad = await unitofwork.Proveedores.GetByIdAsync(id);
-        if (entidad == null){
+        if (entidad == null)
+        {
             return NotFound();
         }
         return this.mapper.Map<ProveedorDto>(entidad);
@@ -62,20 +63,21 @@ public class ProveedorController  : BaseApiController
         var entidad = this.mapper.Map<Proveedor>(entidadDto);
         this.unitofwork.Proveedores.Add(entidad);
         await unitofwork.SaveAsync();
-        if(entidad == null)
+        if (entidad == null)
         {
             return BadRequest();
         }
         entidadDto.Id = entidad.Id;
-        return CreatedAtAction(nameof(Post), new {id = entidadDto.Id}, entidadDto);
+        return CreatedAtAction(nameof(Post), new { id = entidadDto.Id }, entidadDto);
     }
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-    public async Task<ActionResult<ProveedorDto>> Put(int id, [FromBody]ProveedorDto entidadDto){
-        if(entidadDto == null)
+    public async Task<ActionResult<ProveedorDto>> Put(int id, [FromBody] ProveedorDto entidadDto)
+    {
+        if (entidadDto == null)
         {
             return NotFound();
         }
@@ -87,9 +89,10 @@ public class ProveedorController  : BaseApiController
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Delete(int id){
+    public async Task<IActionResult> Delete(int id)
+    {
         var entidad = await unitofwork.Proveedores.GetByIdAsync(id);
-        if(entidad == null)
+        if (entidad == null)
         {
             return NotFound();
         }
@@ -97,4 +100,16 @@ public class ProveedorController  : BaseApiController
         await unitofwork.SaveAsync();
         return NoContent();
     }
+
+    [HttpGet("ProveedoresNaturales")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> ProveedoresNaturales()
+    {
+        var entidad = await unitofwork.Proveedores.ProveedoresNaturales();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
+
+
 }

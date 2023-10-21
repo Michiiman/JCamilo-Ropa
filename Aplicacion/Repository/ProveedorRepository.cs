@@ -41,4 +41,20 @@ public class ProveedorRepository : GenericRepo<Proveedor>, IProveedor
 
         return (totalRegistros, registros);
     }
+
+    public async Task<IEnumerable<Object>> ProveedoresNaturales()
+    {
+        var Proveedores = await(
+            from p in _context.Proveedores
+            join tp in _context.TipoPersonas on p.TipoPersonaIdFk equals tp.Id
+            where tp.Nombre=="Natural"
+            select new 
+            {
+                Nombre=p.Nombre,
+                Documento=p.NitProveedor
+            }
+        ).ToListAsync();
+
+        return Proveedores;
+    }
 }

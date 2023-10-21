@@ -97,4 +97,14 @@ public class PrendaController  : BaseApiController
         await unitofwork.SaveAsync();
         return NoContent();
     }
+
+    [HttpGet("PrendaPorProteccion")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<object>> PrendaPorProteccion()
+    {
+        var entidad = await unitofwork.Prendas.PrendaPorProteccion();
+        var dto = mapper.Map<IEnumerable<object>>(entidad);
+        return Ok(dto);
+    }
 }
